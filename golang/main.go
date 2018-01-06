@@ -1,17 +1,17 @@
 package main
 
 import (
-	"io/ioutil"
-	"fmt"
-	"net/http"
-	"time"
-	"strconv"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strconv"
+	"time"
 )
 
-func main(){
+func main() {
 
 	// マルチログインのURL
 	url := "http://localhost:8040"
@@ -37,18 +37,18 @@ func main(){
 	// hashを生成
 	mac := hmac.New(sha256.New, []byte(secret))
 	mac.Write([]byte(join))
-	hash:=  hex.EncodeToString(mac.Sum(nil))
+	hash := hex.EncodeToString(mac.Sum(nil))
 
 	// 生成したhashを記述する
 	authorization += "signature=" + hash + ","
 
 	// 実際に送る
-	req, _ := http.NewRequest("GET", url + param, nil)
+	req, _ := http.NewRequest("GET", url+param, nil)
 	req.Header.Set("Authorization", authorization)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 	byteArray, _ := ioutil.ReadAll(resp.Body)
